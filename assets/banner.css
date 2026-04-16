@@ -1,0 +1,87 @@
+.running-banner {
+    --running-banner-duration: 18s;
+    --running-banner-gap: 1.5rem;
+    --running-banner-padding: 0.35rem;
+    --running-banner-font-size: 1rem;
+    --running-banner-font-weight: 700;
+    --running-banner-font-style: normal;
+    overflow: hidden;
+    width: 100%;
+    color: var(--running-banner-text-color, inherit);
+    background: var(--running-banner-background, transparent);
+    font-family: var(--running-banner-font-family, inherit);
+    padding: 10px 0;
+}
+
+.running-banner__viewport {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    min-width: 100%;
+    animation: running-banner-scroll var(--running-banner-duration) linear infinite;
+    will-change: transform;
+}
+
+.running-banner__track {
+    display: flex;
+    flex-shrink: 0;
+    /* min-width: 100%; */
+    align-items: center;
+    justify-content: space-around;
+    gap: var(--running-banner-gap);
+    padding-right: var(--running-banner-gap);
+}
+
+.running-banner__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-block: var(--running-banner-padding);
+    font-size: var(--running-banner-font-size);
+    font-weight: var(--running-banner-font-weight);
+    font-style: var(--running-banner-font-style);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.running-banner__icon {
+    width: 30px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.running-banner--preview .running-banner__viewport {
+    animation-play-state: paused;
+}
+
+@keyframes running-banner-scroll {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@media (max-width: 977px) {
+    .running-banner {
+        --running-banner-gap: 0.75rem;
+    }
+
+    .running-banner__item {
+        gap: 0.5rem;
+    }
+
+    .running-banner__icon {
+        width: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .running-banner__viewport {
+        animation: none;
+    }
+}
