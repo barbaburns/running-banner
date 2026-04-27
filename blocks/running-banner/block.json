@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "running-banner/running-banner",
+  "version": "1.0.0",
+  "title": "Running Banner",
+  "category": "widgets",
+  "icon": "leftright",
+  "description": "Creates a repeated text and image banner that scrolls horizontally.",
+  "keywords": ["banner", "marquee", "ticker"],
+  "textdomain": "running-banner",
+  "editorScript": "running-banner-editor",
+  "style": "running-banner-style",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": "Ultimas"
+    },
+    "imageId": {
+      "type": "number",
+      "default": 0
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "repeatCount": {
+      "type": "number",
+      "default": 10
+    },
+    "speed": {
+      "type": "number",
+      "default": 18
+    },
+    "textColor": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": ""
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 16
+    },
+<<<<<<< HEAD
+    "fontSizeTablet": {
+      "type": "number"
+    },
+    "fontSizeMobile": {
+      "type": "number"
+    },
+=======
+>>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
+    "fontWeight": {
+      "type": "string",
+      "default": "700"
+    },
+    "fontStyle": {
+      "type": "string",
+      "default": "normal"
+    }
+  }
+}
