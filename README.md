@@ -26,7 +26,7 @@ This plugin now checks GitHub releases for updates using the repository URL in i
 To publish an update that WordPress can install:
 
 1. Bump the plugin version in `running-banner.php` and `blocks/running-banner/block.json`
-2. Create a Git tag that matches the version, such as `v1.0.2`
+2. Create a Git tag that matches the version, such as `v1.0.3`
 3. Publish a GitHub Release for that tag
 4. GitHub Actions will build and attach `running-banner.zip` automatically
 
