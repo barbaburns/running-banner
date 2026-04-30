@@ -3,13 +3,11 @@
     --running-banner-gap: 1.5rem;
     --running-banner-padding: 0.35rem;
     --running-banner-font-size: 1rem;
-<<<<<<< HEAD
     --running-banner-font-size-tablet: var(--running-banner-font-size);
     --running-banner-font-size-mobile: var(--running-banner-font-size-tablet);
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
     --running-banner-font-weight: 700;
     --running-banner-font-style: normal;
+    --running-banner-text-transform: none;
     overflow: hidden;
     width: 100%;
     color: var(--running-banner-text-color, inherit);
@@ -46,7 +44,7 @@
     font-weight: var(--running-banner-font-weight);
     font-style: var(--running-banner-font-style);
     line-height: 1;
-    text-transform: uppercase;
+    text-transform: var(--running-banner-text-transform);
     letter-spacing: 0.08em;
     white-space: nowrap;
 }
@@ -78,10 +76,7 @@
 
     .running-banner__item {
         gap: 0.5rem;
-<<<<<<< HEAD
         font-size: var(--running-banner-font-size-tablet, var(--running-banner-font-size));
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
     }
 
     .running-banner__icon {
@@ -89,15 +84,12 @@
     }
 }
 
-<<<<<<< HEAD
 @media (max-width: 767px) {
     .running-banner__item {
         font-size: var(--running-banner-font-size-mobile, var(--running-banner-font-size-tablet, var(--running-banner-font-size)));
     }
 }
 
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
 @media (prefers-reduced-motion: reduce) {
     .running-banner__viewport {
         animation: none;

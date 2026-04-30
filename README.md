@@ -78,6 +78,7 @@ Example with image and styles:
 -   `fontSize`
 -   `fontWeight`
 -   `fontStyle`
+-   `textTransform`
 
 ## Notes
 
@@ -85,6 +86,7 @@ Example with image and styles:
 -   `speed` is limited to values between `8` and `60`
 -   `fontSize` is limited to values between `12` and `48`
 -   `fontStyle` supports `normal` and `italic`
+-   `textTransform` supports `none`, `uppercase`, `lowercase`, and `capitalize`
 -   The plugin includes a curated built-in Google Fonts list for the editor control
 
 ## Files

@@ -3,7 +3,7 @@
  * Plugin Name: Running Banner
  * Plugin URI: https://github.com/barbaburns/running-banner
  * Description: Adds a reusable running banner block and shortcode for repeated word-and-image marquees.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Bruno Fernandes
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -84,11 +84,13 @@ final class Running_Banner {
 
         $release = self::get_latest_release();
 
-        if (empty($release['version']) || version_compare($release['version'], self::VERSION, '<=')) {
+        if (empty($release['version'])) {
             return $update;
         }
 
-        if (empty($release['package'])) {
+        $has_newer_version = version_compare($release['version'], self::VERSION, '>');
+
+        if ($has_newer_version && empty($release['package'])) {
             return $update;
         }
 
@@ -97,7 +99,7 @@ final class Running_Banner {
             'slug' => self::SLUG,
             'plugin' => self::plugin_basename(),
             'url' => $release['url'],
-            'package' => $release['package'],
+            'package' => !empty($release['package']) ? $release['package'] : '',
             'version' => $release['version'],
             'new_version' => $release['version'],
             'tested' => isset($plugin_data['RequiresWP']) ? (string) $plugin_data['RequiresWP'] : '',
@@ -175,6 +177,7 @@ final class Running_Banner {
             'fontSizeMobile'  => null,
             'fontWeight'      => '700',
             'fontStyle'       => 'normal',
+            'textTransform'   => 'none',
         ];
 
         $attributes = wp_parse_args(is_array($attributes) ? $attributes : [], $defaults);
@@ -195,6 +198,7 @@ final class Running_Banner {
         $font_size_mobile = self::sanitize_responsive_font_size($attributes['fontSizeMobile'], $font_size_tablet);
         $font_weight = self::sanitize_font_weight((string) $attributes['fontWeight']);
         $font_style = self::sanitize_font_style((string) $attributes['fontStyle']);
+        $text_transform = self::sanitize_text_transform((string) $attributes['textTransform']);
 
         wp_enqueue_style('running-banner-style');
 
@@ -219,6 +223,7 @@ final class Running_Banner {
             '--running-banner-font-size-mobile' => $font_size_mobile . 'px',
             '--running-banner-font-weight' => $font_weight,
             '--running-banner-font-style' => $font_style,
+            '--running-banner-text-transform' => $text_transform,
         ];
 
         if ('' !== $text_color) {
@@ -307,6 +312,8 @@ final class Running_Banner {
             'font_weight' => 'fontWeight',
             'fontstyle' => 'fontStyle',
             'font_style' => 'fontStyle',
+            'texttransform' => 'textTransform',
+            'text_transform' => 'textTransform',
         ];
 
         foreach ($aliases as $old_key => $new_key) {
@@ -339,6 +346,11 @@ final class Running_Banner {
     private static function sanitize_font_style($value) {
         $allowed = ['normal', 'italic'];
         return in_array($value, $allowed, true) ? $value : 'normal';
+    }
+
+    private static function sanitize_text_transform($value) {
+        $allowed = ['none', 'uppercase', 'lowercase', 'capitalize'];
+        return in_array($value, $allowed, true) ? $value : 'none';
     }
 
     private static function get_google_font_options() {

@@ -37,6 +37,12 @@
         { label: __('Normal', 'running-banner'), value: 'normal' },
         { label: __('Italic', 'running-banner'), value: 'italic' },
     ];
+    var TEXT_TRANSFORM_OPTIONS = [
+        { label: __('Uppercase', 'running-banner'), value: 'uppercase' },
+        { label: __('Lowercase', 'running-banner'), value: 'lowercase' },
+        { label: __('Capitalize', 'running-banner'), value: 'capitalize' },
+        { label: __('None', 'running-banner'), value: 'none' },
+    ];
 
     function buildItems(label, imageUrl, imageAlt, repeatCount) {
         var items = [];
@@ -152,6 +158,7 @@
             var fontSizeMobile = normalizeResponsiveFontSize(attributes.fontSizeMobile, fontSizeTablet);
             var fontWeight = attributes.fontWeight || '700';
             var fontStyle = attributes.fontStyle || 'normal';
+            var textTransform = attributes.textTransform || 'none';
             var fontFamilyOptions = getFontFamilyOptions(fontFamily);
             var items = buildItems(label, imageUrl, imageAlt, repeatCount);
             var previewStyle = {
@@ -161,6 +168,7 @@
                 '--running-banner-font-size-mobile': fontSizeMobile + 'px',
                 '--running-banner-font-weight': fontWeight,
                 '--running-banner-font-style': fontStyle,
+                '--running-banner-text-transform': textTransform,
             };
 
             if (textColor) {
@@ -311,6 +319,14 @@
                             options: FONT_STYLE_OPTIONS,
                             onChange: function (value) {
                                 setAttributes({ fontStyle: value || 'normal' });
+                            },
+                        }),
+                        el(SelectControl, {
+                            label: __('Text Transform', 'running-banner'),
+                            value: textTransform,
+                            options: TEXT_TRANSFORM_OPTIONS,
+                            onChange: function (value) {
+                                setAttributes({ textTransform: value || 'none' });
                             },
                         }),
                         el(SelectControl, {
