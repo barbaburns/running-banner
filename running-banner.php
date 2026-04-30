@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Running Banner
  * Description: Adds a reusable running banner block and shortcode for repeated word-and-image marquees.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Bruno Fernandes
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Running_Banner {
-    private const VERSION = '1.0.0';
+    private const VERSION = '1.0.1';
     private const SHORTCODE = 'running-banner';
 
     public static function init() {
