@@ -4,6 +4,9 @@
  * Plugin URI: https://github.com/barbaburns/running-banner
  * Description: Adds a reusable running banner block and shortcode for repeated word-and-image marquees.
  * Version: 1.0.3
+ * Requires at least: 5.8
+ * Tested up to: 6.9.4
+ * Requires PHP: 7.3
  * Author: Bruno Fernandes
  * Author URI: https://dev.bfernandes.cc/
  * License: GPL v2 or later
@@ -16,21 +19,15 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/includes/class-running-banner-updater.php';
+
 final class Running_Banner {
     private const VERSION = '1.0.3';
     private const SHORTCODE = 'running-banner';
-    private const SLUG = 'running-banner';
-    private const UPDATE_URI = 'https://github.com/barbaburns/running-banner';
-    private const REPOSITORY = 'barbaburns/running-banner';
-    private const RELEASE_ASSET = 'running-banner.zip';
-    private const RELEASE_CACHE_KEY = 'running_banner_github_release';
-    private const RELEASE_CACHE_TTL = 21600;
 
     public static function init() {
         add_action('init', [__CLASS__, 'register']);
-        add_filter('update_plugins_github.com', [__CLASS__, 'filter_plugin_update'], 10, 4);
-        add_filter('plugins_api', [__CLASS__, 'filter_plugin_info'], 10, 3);
-        add_action('upgrader_process_complete', [__CLASS__, 'clear_release_cache'], 10, 2);
+        Running_Banner_Updater::init(__FILE__, self::VERSION);
     }
 
     public static function register() {
@@ -74,90 +71,6 @@ final class Running_Banner {
 
     public static function render_block($attributes = [], $content = '', $block = null) {
         return self::render($attributes, true);
-    }
-
-    public static function filter_plugin_update($update, $plugin_data, $plugin_file, $locales) {
-        unset($locales);
-
-        if (self::plugin_basename() !== $plugin_file) {
-            return $update;
-        }
-
-        $release = self::get_latest_release();
-
-        if (empty($release['version'])) {
-            return $update;
-        }
-
-        $has_newer_version = version_compare($release['version'], self::VERSION, '>');
-
-        if ($has_newer_version && empty($release['package'])) {
-            return $update;
-        }
-
-        return [
-            'id' => self::UPDATE_URI,
-            'slug' => self::SLUG,
-            'plugin' => self::plugin_basename(),
-            'url' => $release['url'],
-            'package' => !empty($release['package']) ? $release['package'] : '',
-            'version' => $release['version'],
-            'new_version' => $release['version'],
-            'tested' => isset($plugin_data['RequiresWP']) ? (string) $plugin_data['RequiresWP'] : '',
-            'requires_php' => isset($plugin_data['RequiresPHP']) ? (string) $plugin_data['RequiresPHP'] : '',
-            'icons' => [],
-            'banners' => [],
-            'banners_rtl' => [],
-            'translations' => [],
-        ];
-    }
-
-    public static function filter_plugin_info($result, $action, $args) {
-        if ('plugin_information' !== $action || empty($args->slug) || self::SLUG !== $args->slug) {
-            return $result;
-        }
-
-        $release = self::get_latest_release();
-
-        if (empty($release['version'])) {
-            return $result;
-        }
-
-        return (object) [
-            'name' => 'Running Banner',
-            'slug' => self::SLUG,
-            'version' => $release['version'],
-            'author' => '<a href="https://github.com/barbaburns">Bruno Fernandes</a>',
-            'homepage' => self::UPDATE_URI,
-            'download_link' => $release['package'],
-            'last_updated' => $release['published_at'],
-            'sections' => [
-                'description' => wp_kses_post('<p>Adds a reusable running banner block and shortcode for repeated word-and-image marquees.</p>'),
-                'changelog' => wp_kses_post(wpautop(self::get_release_notes($release))),
-            ],
-        ];
-    }
-
-    public static function clear_release_cache($upgrader, $options) {
-        unset($upgrader);
-
-        if (empty($options['action']) || 'update' !== $options['action']) {
-            return;
-        }
-
-        if (empty($options['type']) || 'plugin' !== $options['type']) {
-            return;
-        }
-
-        if (empty($options['plugins']) || !is_array($options['plugins'])) {
-            return;
-        }
-
-        if (!in_array(self::plugin_basename(), $options['plugins'], true)) {
-            return;
-        }
-
-        delete_site_transient(self::RELEASE_CACHE_KEY);
     }
 
     private static function render($attributes, $is_block) {
@@ -529,129 +442,6 @@ final class Running_Banner {
         }
 
         return preg_match('/^\d{3}$/', $font_weight) ? $font_weight : '400';
-    }
-
-    private static function get_latest_release() {
-        $cached = get_site_transient(self::RELEASE_CACHE_KEY);
-
-        if (is_array($cached)) {
-            return $cached;
-        }
-
-        $response = wp_remote_get(
-            sprintf('https://api.github.com/repos/%s/releases/latest', self::REPOSITORY),
-            [
-                'headers' => self::get_github_headers(),
-                'timeout' => 15,
-            ]
-        );
-
-        if (is_wp_error($response)) {
-            return [];
-        }
-
-        $code = (int) wp_remote_retrieve_response_code($response);
-
-        if (200 !== $code) {
-            return [];
-        }
-
-        $body = json_decode(wp_remote_retrieve_body($response), true);
-
-        if (!is_array($body)) {
-            return [];
-        }
-
-        $release = [
-            'version' => self::normalize_release_version(isset($body['tag_name']) ? $body['tag_name'] : ''),
-            'url' => isset($body['html_url']) ? esc_url_raw((string) $body['html_url']) : self::UPDATE_URI,
-            'package' => self::find_release_package($body),
-            'published_at' => isset($body['published_at']) ? (string) $body['published_at'] : '',
-            'body' => isset($body['body']) ? (string) $body['body'] : '',
-        ];
-
-        if ('' === $release['version']) {
-            return [];
-        }
-
-        set_site_transient(self::RELEASE_CACHE_KEY, $release, self::RELEASE_CACHE_TTL);
-
-        return $release;
-    }
-
-    private static function get_github_headers() {
-        $headers = [
-            'Accept' => 'application/vnd.github+json',
-            'User-Agent' => 'Running-Banner-Updater',
-        ];
-
-        $token = defined('RUNNING_BANNER_GITHUB_TOKEN') ? (string) RUNNING_BANNER_GITHUB_TOKEN : '';
-        $token = apply_filters('running_banner_github_token', $token);
-
-        if ('' !== $token) {
-            $headers['Authorization'] = 'Bearer ' . $token;
-        }
-
-        return $headers;
-    }
-
-    private static function find_release_package($release) {
-        if (empty($release['assets']) || !is_array($release['assets'])) {
-            return '';
-        }
-
-        foreach ($release['assets'] as $asset) {
-            if (!is_array($asset)) {
-                continue;
-            }
-
-            $name = isset($asset['name']) ? (string) $asset['name'] : '';
-
-            if (self::RELEASE_ASSET !== $name) {
-                continue;
-            }
-
-            return isset($asset['browser_download_url']) ? esc_url_raw((string) $asset['browser_download_url']) : '';
-        }
-
-        foreach ($release['assets'] as $asset) {
-            if (!is_array($asset)) {
-                continue;
-            }
-
-            $name = isset($asset['name']) ? (string) $asset['name'] : '';
-
-            if (!preg_match('/\.zip$/i', $name)) {
-                continue;
-            }
-
-            return isset($asset['browser_download_url']) ? esc_url_raw((string) $asset['browser_download_url']) : '';
-        }
-
-        return '';
-    }
-
-    private static function normalize_release_version($version) {
-        $version = trim((string) $version);
-        $version = preg_replace('/^[vV]/', '', $version);
-
-        return preg_match('/^\d+(?:\.\d+)*(?:[-+][0-9A-Za-z.-]+)?$/', $version) ? $version : '';
-    }
-
-    private static function get_release_notes($release) {
-        if (!empty($release['body'])) {
-            return (string) $release['body'];
-        }
-
-        return sprintf(
-            'Latest release: %1$s. Download it from %2$s.',
-            $release['version'],
-            $release['url']
-        );
-    }
-
-    private static function plugin_basename() {
-        return plugin_basename(__FILE__);
     }
 
     private static function build_style_string($style_rules) {
