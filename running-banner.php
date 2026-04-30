@@ -5,6 +5,7 @@
  * Description: Adds a reusable running banner block and shortcode for repeated word-and-image marquees.
  * Version: 1.0.3
  * Author: Bruno Fernandes
+ * Author URI: https://dev.bfernandes.cc/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Update URI: https://github.com/barbaburns/running-banner
@@ -16,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Running_Banner {
-    private const VERSION = '1.0.2';
+    private const VERSION = '1.0.3';
     private const SHORTCODE = 'running-banner';
     private const SLUG = 'running-banner';
     private const UPDATE_URI = 'https://github.com/barbaburns/running-banner';
