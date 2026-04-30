@@ -56,15 +56,12 @@
       "type": "number",
       "default": 16
     },
-<<<<<<< HEAD
     "fontSizeTablet": {
       "type": "number"
     },
     "fontSizeMobile": {
       "type": "number"
     },
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
     "fontWeight": {
       "type": "string",
       "default": "700"

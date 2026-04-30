@@ -78,11 +78,8 @@ final class Running_Banner {
             'backgroundColor' => '',
             'fontFamily'      => '',
             'fontSize'        => 16,
-<<<<<<< HEAD
             'fontSizeTablet'  => null,
             'fontSizeMobile'  => null,
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
             'fontWeight'      => '700',
             'fontStyle'       => 'normal',
         ];
@@ -101,11 +98,8 @@ final class Running_Banner {
         $background_color = sanitize_hex_color((string) $attributes['backgroundColor']);
         $font_family = self::sanitize_font_family((string) $attributes['fontFamily']);
         $font_size = max(12, min(48, absint($attributes['fontSize'])));
-<<<<<<< HEAD
         $font_size_tablet = self::sanitize_responsive_font_size($attributes['fontSizeTablet'], $font_size);
         $font_size_mobile = self::sanitize_responsive_font_size($attributes['fontSizeMobile'], $font_size_tablet);
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
         $font_weight = self::sanitize_font_weight((string) $attributes['fontWeight']);
         $font_style = self::sanitize_font_style((string) $attributes['fontStyle']);
 
@@ -128,11 +122,8 @@ final class Running_Banner {
         $style_rules = [
             '--running-banner-duration' => $speed . 's',
             '--running-banner-font-size' => $font_size . 'px',
-<<<<<<< HEAD
             '--running-banner-font-size-tablet' => $font_size_tablet . 'px',
             '--running-banner-font-size-mobile' => $font_size_mobile . 'px',
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
             '--running-banner-font-weight' => $font_weight,
             '--running-banner-font-style' => $font_style,
         ];
@@ -215,13 +206,10 @@ final class Running_Banner {
             'font_family' => 'fontFamily',
             'fontsize' => 'fontSize',
             'font_size' => 'fontSize',
-<<<<<<< HEAD
             'fontsizetablet' => 'fontSizeTablet',
             'font_size_tablet' => 'fontSizeTablet',
             'fontsizemobile' => 'fontSizeMobile',
             'font_size_mobile' => 'fontSizeMobile',
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
             'fontweight' => 'fontWeight',
             'font_weight' => 'fontWeight',
             'fontstyle' => 'fontStyle',
@@ -242,7 +230,6 @@ final class Running_Banner {
         return trim(str_replace([';', '{', '}'], '', $value));
     }
 
-<<<<<<< HEAD
     private static function sanitize_responsive_font_size($value, $fallback) {
         if (null === $value || '' === $value) {
             return $fallback;
@@ -251,8 +238,6 @@ final class Running_Banner {
         return max(12, min(48, absint($value)));
     }
 
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
     private static function sanitize_font_weight($value) {
         $allowed = ['400', '500', '600', '700', '800', '900', 'normal', 'bold'];
         return in_array($value, $allowed, true) ? $value : '700';
