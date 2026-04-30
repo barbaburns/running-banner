@@ -1,0 +1,54 @@
+name: Build Release Package
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-zip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Validate release version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PLUGIN_VERSION="$(php -r '$content = file_get_contents("running-banner.php"); if (!preg_match("/^[ \t]*\\*[ \t]+Version:[ \t]*(.+)$/mi", $content, $matches)) { fwrite(STDERR, "Could not find plugin version.\n"); exit(1); } echo trim($matches[1]);')"
+          BLOCK_VERSION="$(php -r '$data = json_decode(file_get_contents("blocks/running-banner/block.json"), true); if (!is_array($data) || empty($data["version"])) { fwrite(STDERR, "Could not find block version.\n"); exit(1); } echo $data["version"];')"
+
+          if [ "$PLUGIN_VERSION" != "$TAG_VERSION" ]; then
+            echo "Tag version ($TAG_VERSION) does not match plugin version ($PLUGIN_VERSION)."
+            exit 1
+          fi
+
+          if [ "$BLOCK_VERSION" != "$TAG_VERSION" ]; then
+            echo "Tag version ($TAG_VERSION) does not match block version ($BLOCK_VERSION)."
+            exit 1
+          fi
+
+      - name: Build plugin ZIP
+        run: |
+          mkdir -p dist/running-banner
+          rsync -av ./ dist/running-banner/ \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude 'dist/' \
+            --exclude '.DS_Store'
+          cd dist
+          zip -r running-banner.zip running-banner
+
+      - name: Upload release asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${GITHUB_REF_NAME}" dist/running-banner.zip --clobber

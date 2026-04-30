@@ -19,6 +19,21 @@
 2. Activate `Running Banner` in the WordPress admin
 3. Add the `Running Banner` block in the editor or use the shortcode
 
+## GitHub Updates
+
+This plugin now checks GitHub releases for updates using the repository URL in its `Update URI` header.
+
+To publish an update that WordPress can install:
+
+1. Bump the plugin version in `running-banner.php` and `blocks/running-banner/block.json`
+2. Create a Git tag that matches the version, such as `v1.0.2`
+3. Publish a GitHub Release for that tag
+4. GitHub Actions will build and attach `running-banner.zip` automatically
+
+The workflow validates that the release tag matches the plugin and block versions before uploading the ZIP.
+
+If you hit GitHub API rate limits, define `RUNNING_BANNER_GITHUB_TOKEN` in `wp-config.php` or filter it with `running_banner_github_token`.
+
 ## Block Usage
 
 Add the `Running Banner` block from the block inserter, then configure:
