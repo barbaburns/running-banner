@@ -130,13 +130,10 @@
         ].concat(FONT_FAMILY_OPTIONS);
     }
 
-<<<<<<< HEAD
     function normalizeResponsiveFontSize(value, fallback) {
         return typeof value === 'number' && value >= 12 && value <= 48 ? value : fallback;
     }
 
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
     function createSettings() {
         return {
         edit: function (props) {
@@ -151,11 +148,8 @@
             var backgroundColor = attributes.backgroundColor;
             var fontFamily = attributes.fontFamily;
             var fontSize = attributes.fontSize || 16;
-<<<<<<< HEAD
             var fontSizeTablet = normalizeResponsiveFontSize(attributes.fontSizeTablet, fontSize);
             var fontSizeMobile = normalizeResponsiveFontSize(attributes.fontSizeMobile, fontSizeTablet);
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
             var fontWeight = attributes.fontWeight || '700';
             var fontStyle = attributes.fontStyle || 'normal';
             var fontFamilyOptions = getFontFamilyOptions(fontFamily);
@@ -163,11 +157,8 @@
             var previewStyle = {
                 '--running-banner-duration': speed + 's',
                 '--running-banner-font-size': fontSize + 'px',
-<<<<<<< HEAD
                 '--running-banner-font-size-tablet': fontSizeTablet + 'px',
                 '--running-banner-font-size-mobile': fontSizeMobile + 'px',
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
                 '--running-banner-font-weight': fontWeight,
                 '--running-banner-font-style': fontStyle,
             };
@@ -219,7 +210,7 @@
                             onChange: function (value) {
                                 setAttributes({ speed: value || 18 });
                             },
-                            min: 8,
+                            min: 0,
                             max: 60,
                         }),
                         el(TextControl, {
