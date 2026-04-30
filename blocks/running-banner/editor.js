@@ -271,11 +271,7 @@
                             initialOpen: false,
                         },
                         el(RangeControl, {
-<<<<<<< HEAD
                             label: __('Desktop font size', 'running-banner'),
-=======
-                            label: __('Font size', 'running-banner'),
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
                             value: fontSize,
                             onChange: function (value) {
                                 setAttributes({ fontSize: value || 16 });
@@ -283,7 +279,6 @@
                             min: 12,
                             max: 48,
                         }),
-<<<<<<< HEAD
                         el(RangeControl, {
                             label: __('Tablet font size', 'running-banner'),
                             value: fontSizeTablet,
@@ -302,8 +297,6 @@
                             min: 12,
                             max: 48,
                         }),
-=======
->>>>>>> 8c4962c7aa75ae27bcbe9a6e1e40cb480a9a17be
                         el(SelectControl, {
                             label: __('Font weight', 'running-banner'),
                             value: fontWeight,
